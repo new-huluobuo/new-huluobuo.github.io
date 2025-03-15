@@ -1,0 +1,46 @@
+<!-- game_1.html 石头剪刀布 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>石头剪刀布</title>
+    <style>
+        body { text-align: center; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 18px; }
+        #result { font-size: 24px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>石头剪刀布</h1>
+    <button onclick="play('石头')">石头</button>
+    <button onclick="play('剪刀')">剪刀</button>
+    <button onclick="play('布')">布</button>
+    <div id="result"></div>
+    <p><a href="index.html">返回首页</a></p>
+
+    <script>
+        function play(playerChoice) {
+            const choices = ['石头', '剪刀', '布'];
+            const computerChoice = choices[Math.floor(Math.random() * 3)];
+            let result;
+
+            if (playerChoice === computerChoice) {
+                result = "平局！";
+            } else if (
+                (playerChoice === '石头' && computerChoice === '剪刀') ||
+                (playerChoice === '剪刀' && computerChoice === '布') ||
+                (playerChoice === '布' && computerChoice === '石头')
+            ) {
+                result = "你赢了！";
+            } else {
+                result = "电脑赢了！";
+            }
+
+            document.getElementById('result').innerHTML = `
+                你的选择：${playerChoice}<br>
+                电脑选择：${computerChoice}<br>
+                ${result}
+            `;
+        }
+    </script>
+</body>
+</html>
