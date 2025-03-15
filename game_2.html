@@ -1,49 +1,110 @@
-<!-- game_2.html 记忆卡牌 -->
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>记忆卡牌</title>
     <style>
-        .memory-game {
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin: 1rem 0;
+            font-size: clamp(1.5rem, 6vw, 2rem);
+        }
+        .game-board {
             display: grid;
-            grid-template-columns: repeat(4, 100px);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin: 20px auto;
-            width: fit-content;
+            padding: 10px;
+            max-width: 500px;
+            margin: 0 auto;
         }
         .card {
-            width: 100px;
-            height: 100px;
+            aspect-ratio: 1;
             background: #2196F3;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 2rem;
             cursor: pointer;
-            transition: transform 0.6s;
+            transition: transform 0.6s, background 0.3s;
             transform-style: preserve-3d;
+            color: white;
+            user-select: none;
         }
-        .flipped {
+        .card.flipped {
             background: white;
+            color: #2196F3;
             transform: rotateY(180deg);
+        }
+        .card.matched {
+            background: #4CAF50 !important;
+            transform: rotateY(180deg) scale(0.95);
+            cursor: default;
+        }
+        #score {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+        .back-link {
+            margin-top: auto;
+            padding: 20px;
+        }
+        .back-link a {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        @media (max-width: 480px) {
+            .game-board {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <h1>记忆卡牌</h1>
-    <div class="memory-game" id="gameBoard"></div>
-    <p>得分: <span id="score">0</span></p>
-    <p><a href="index.html">返回首页</a></p>
+    <div class="container">
+        <h1>🎴 记忆卡牌</h1>
+        <div class="game-board" id="gameBoard"></div>
+        <div id="score">得分: 0</div>
+        <div class="back-link">
+            <a href="index.html">返回首页</a>
+        </div>
+    </div>
 
     <script>
-        const symbols = ['A', 'B', 'C', 'D', 'A', 'B', 'C', 'D'];
+        const symbols = ['🍎', '🍌', '🍒', '🍊', '🍉', '🍇', '🥭', '🍓'];
+        const gameBoard = document.getElementById('gameBoard');
+        const scoreElement = document.getElementById('score');
         let flippedCards = [];
+        let canFlip = true;
         let score = 0;
+        let moves = 0;
 
-        function createBoard() {
-            symbols.sort(() => Math.random() - 0.5);
-            const gameBoard = document.getElementById('gameBoard');
-            symbols.forEach(symbol => {
+        // 创建游戏板
+        function initGame() {
+            const gameSymbols = [...symbols, ...symbols];
+            gameSymbols.sort(() => Math.random() - 0.5);
+            
+            gameBoard.innerHTML = '';
+            gameSymbols.forEach(symbol => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.textContent = symbol;
@@ -52,32 +113,49 @@
             });
         }
 
+        // 翻转卡片
         function flipCard(e) {
+            if (!canFlip || e.target.classList.contains('matched')) return;
+            
             const card = e.target;
-            if (!card.classList.contains('flipped') && flippedCards.length < 2) {
-                card.classList.add('flipped');
-                flippedCards.push(card);
-                
-                if (flippedCards.length === 2) {
-                    setTimeout(checkMatch, 500);
-                }
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                canFlip = false;
+                moves++;
+                setTimeout(checkMatch, 800);
             }
         }
 
+        // 检查是否匹配
         function checkMatch() {
             const [card1, card2] = flippedCards;
+            
             if (card1.textContent === card2.textContent) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
                 score += 10;
-                document.getElementById('score').textContent = score;
-                flippedCards = [];
+                scoreElement.textContent = `得分: ${score}`;
+                
+                // 检查游戏是否完成
+                if (document.querySelectorAll('.matched').length === 16) {
+                    alert(`🎉 游戏完成！得分: ${score} 步数: ${moves}`);
+                    initGame();
+                    score = 0;
+                    moves = 0;
+                    scoreElement.textContent = `得分: 0`;
+                }
             } else {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                flippedCards = [];
             }
+
+            flippedCards = [];
+            canFlip = true;
         }
 
-        createBoard();
+        initGame();
     </script>
 </body>
 </html>
