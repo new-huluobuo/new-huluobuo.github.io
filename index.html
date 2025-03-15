@@ -1,46 +1,80 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>小游戏合集</title>
     <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
             background: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
         h1 {
             color: #333;
+            text-align: center;
+            font-size: clamp(1.8rem, 6vw, 2.5rem);
             margin: 2rem 0;
         }
         .game-list {
             list-style: none;
             padding: 0;
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         }
         .game-list li {
-            margin: 1rem;
-            padding: 1rem 2rem;
-            background: #4CAF50;
-            border-radius: 5px;
+            background: var(--primary-color);
+            border-radius: 10px;
+            transition: transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .game-list li:hover {
+            transform: translateY(-3px);
         }
         .game-list a {
+            display: block;
+            padding: 1.5rem;
             color: white;
             text-decoration: none;
-            font-size: 1.2rem;
+            text-align: center;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 600px) {
+            .game-list {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>欢迎来到网页小游戏合集</h1>
-    <ul class="game-list">
-        <li><a href="game_1.html">石头剪刀布</a></li>
-        <li><a href="game_2.html">记忆卡牌</a></li>
-        <li><a href="game_3.html">贪吃蛇</a></li>
-        <li><a href="game_4.html">打地鼠</a></li>
-        <li><a href="game_5.html">数字猜谜</a></li>
-    </ul>
+    <div class="container">
+        <h1>欢迎来到网页小游戏合集</h1>
+        <ul class="game-list">
+            <li><a href="game_1.html">✊✌️✋ 石头剪刀布</a></li>
+            <li><a href="game_2.html">🎴 记忆卡牌</a></li>
+            <li><a href="game_3.html">🐍 贪吃蛇</a></li>
+            <li><a href="game_4.html">🐭 打地鼠</a></li>
+            <li><a href="game_5.html">🔢 数字猜谜</a></li>
+        </ul>
+    </div>
 </body>
 </html>
