@@ -1,45 +1,130 @@
-<!-- game_1.html 石头剪刀布 -->
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>石头剪刀布</title>
     <style>
-        body { text-align: center; padding: 20px; }
-        button { padding: 10px 20px; margin: 10px; font-size: 18px; }
-        #result { font-size: 24px; margin-top: 20px; }
+        :root {
+            --button-size: clamp(80px, 20vw, 120px);
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+            margin: 1rem 0;
+            font-size: clamp(1.5rem, 6vw, 2rem);
+        }
+        .choices {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .choice-btn {
+            width: var(--button-size);
+            height: var(--button-size);
+            border: none;
+            border-radius: 15px;
+            background: #4CAF50;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .choice-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        #result {
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            margin: 1rem 0;
+            text-align: center;
+            line-height: 1.5;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .back-link {
+            margin-top: auto;
+            padding: 20px;
+        }
+        .back-link a {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
-    <h1>石头剪刀布</h1>
-    <button onclick="play('石头')">石头</button>
-    <button onclick="play('剪刀')">剪刀</button>
-    <button onclick="play('布')">布</button>
-    <div id="result"></div>
-    <p><a href="index.html">返回首页</a></p>
+    <div class="container">
+        <h1>✊✌️✋ 石头剪刀布</h1>
+        <div class="choices">
+            <button class="choice-btn" onclick="playGame('rock')">✊</button>
+            <button class="choice-btn" onclick="playGame('scissors')">✌️</button>
+            <button class="choice-btn" onclick="playGame('paper')">✋</button>
+        </div>
+        <div id="result"></div>
+        <div class="back-link">
+            <a href="index.html">返回首页</a>
+        </div>
+    </div>
 
     <script>
-        function play(playerChoice) {
-            const choices = ['石头', '剪刀', '布'];
+        const choices = ['rock', 'scissors', 'paper'];
+        const resultDiv = document.getElementById('result');
+        
+        function playGame(playerChoice) {
             const computerChoice = choices[Math.floor(Math.random() * 3)];
-            let result;
-
-            if (playerChoice === computerChoice) {
-                result = "平局！";
-            } else if (
-                (playerChoice === '石头' && computerChoice === '剪刀') ||
-                (playerChoice === '剪刀' && computerChoice === '布') ||
-                (playerChoice === '布' && computerChoice === '石头')
-            ) {
-                result = "你赢了！";
-            } else {
-                result = "电脑赢了！";
-            }
-
-            document.getElementById('result').innerHTML = `
-                你的选择：${playerChoice}<br>
-                电脑选择：${computerChoice}<br>
-                ${result}
+            const result = getResult(playerChoice, computerChoice);
+            
+            const emojiMap = {
+                rock: '✊', 
+                scissors: '✌️', 
+                paper: '✋'
+            };
+            
+            resultDiv.innerHTML = `
+                <div>你的选择：${emojiMap[playerChoice]}</div>
+                <div>电脑选择：${emojiMap[computerChoice]}</div>
+                <div style="margin-top:10px; font-weight:bold; color:${result.color}">${result.text}</div>
             `;
+        }
+
+        function getResult(player, computer) {
+            if (player === computer) {
+                return { text: "平局！", color: "#666" };
+            }
+            if (
+                (player === 'rock' && computer === 'scissors') ||
+                (player === 'scissors' && computer === 'paper') ||
+                (player === 'paper' && computer === 'rock')
+            ) {
+                return { text: "🎉 你赢了！", color: "#4CAF50" };
+            }
+            return { text: "😢 电脑赢了！", color: "#f44336" };
         }
     </script>
 </body>
