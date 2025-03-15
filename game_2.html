@@ -1,0 +1,83 @@
+<!-- game_2.html 记忆卡牌 -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>记忆卡牌</title>
+    <style>
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            gap: 10px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background: #2196F3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flipped {
+            background: white;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body>
+    <h1>记忆卡牌</h1>
+    <div class="memory-game" id="gameBoard"></div>
+    <p>得分: <span id="score">0</span></p>
+    <p><a href="index.html">返回首页</a></p>
+
+    <script>
+        const symbols = ['A', 'B', 'C', 'D', 'A', 'B', 'C', 'D'];
+        let flippedCards = [];
+        let score = 0;
+
+        function createBoard() {
+            symbols.sort(() => Math.random() - 0.5);
+            const gameBoard = document.getElementById('gameBoard');
+            symbols.forEach(symbol => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = symbol;
+                card.addEventListener('click', flipCard);
+                gameBoard.appendChild(card);
+            });
+        }
+
+        function flipCard(e) {
+            const card = e.target;
+            if (!card.classList.contains('flipped') && flippedCards.length < 2) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+                
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 500);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.textContent === card2.textContent) {
+                score += 10;
+                document.getElementById('score').textContent = score;
+                flippedCards = [];
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                flippedCards = [];
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
